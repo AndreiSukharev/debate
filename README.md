@@ -9,7 +9,8 @@ App for managing your tasks.
 
 [Deployment] Docker
 
-General aim is to learn Go for building REST API
+General aim is to learn Go for building REST API.
+
 App goals:
 - [x] Don't use any frameworks 
 - [x] Handle CORS by own wrap function 
