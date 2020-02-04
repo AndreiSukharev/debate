@@ -1,6 +1,5 @@
-# Debate app
-App for managing task
-
+# Task manager app
+App for managing your tasks.
 
 [Server] Go
 
@@ -10,6 +9,14 @@ App for managing task
 
 [Deployment] Docker
 
+General aim is to learn Go for building REST API
+App goals:
+- [x] Don't use any frameworks 
+- [x] Handle CORS by own wrap function 
+- [x] Write pure SQL without ORM
+- [ ] Create Auth
+- [ ] Use JWT
+- [ ] Build CRUD functionality for tasks
 
 ## Getting Started
 
