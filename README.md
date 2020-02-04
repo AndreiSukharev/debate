@@ -1,10 +1,10 @@
 # Debate app
-App for debating on the various topics to improve negotiation skills
+App for managing task
 
 
 [Server] Go
 
-[Client] React
+[Client] Vue
 
 [Database] PostgreSQL
 
@@ -27,12 +27,12 @@ https://docs.docker.com/compose/install/
 ## Build and Run
 
 ```
-git clone https://github.com/AndreiSukharev/debate.git debate
-cd debate
-docker-compose up --build
+git clone https://github.com/AndreiSukharev/debate.git task
+cd task
+go build main.go
 cd client
 npm install
 npm run dev
-front: http://localhost:5000
-server: http://localhost:4440/ 
+front: http://localhost:8080
+server: http://localhost:5010/ 
 ```
