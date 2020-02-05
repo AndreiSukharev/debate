@@ -17,7 +17,7 @@
         </div>
 
         <div class="col border ml-2">
-            <form>
+            <form @submit.prevent>
                 <div class="form-group">
                     <label for="signUp">SignUp</label>
                     <input type="text" class="form-control" id="signUp" v-model="signUpData.login" placeholder="Login">
@@ -58,14 +58,24 @@
             ]),
             async signIn() {
                 const res = await RegistrationService.signIn(this.signInData);
-                if (res === 'ok') {
+                if (res['message'] === 'ok') {
                     this.loginUser(this.signInData.login)
                 } else {
                     this.$toasted.error('Wrong login or password')
                 }
             },
             async signUp() {
-                const res = await RegistrationService.signUp(this.signUpData);
+                try {
+                    const res = await RegistrationService.signUp(this.signUpData);
+                    console.log('mes',res['message']);
+                    if (res['message'] === 'ok') {
+                        this.$toasted.success('Success. You can login now');
+                    } else {
+                        this.$toasted.error('User already exists')
+                    }
+                } catch (e) {
+                    console.log("error", e)
+                }
             }
         }
     }

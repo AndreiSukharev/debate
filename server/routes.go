@@ -2,32 +2,71 @@ package main
 
 import (
 	"api-test/database"
+	"crypto/sha1"
+	"encoding/hex"
+	"encoding/json"
 	"net/http"
 )
 
+type userData struct {
+	Login    string
+	Password string
+}
+
+func handlePostData(r *http.Request) *userData {
+	var data userData
+
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&data)
+	if err != nil {
+		panic(err)
+	}
+	return &data
+}
+
+func getPassword(login string) string {
+	sqlString := "SELECT password FROM users WHERE login=$1;"
+	//values := []string {login}
+	row := database.GetSpecificFromDB(sqlString, login)
+	return row
+}
+
+func hashPassword(password string) string{
+	hash := sha1.New()
+	hash.Write([]byte(password))
+	sum := hex.EncodeToString(hash.Sum(nil))
+	return sum
+}
+
 func getTasks(w http.ResponseWriter, r *http.Request) {
-	sqlString := "SELECT * FROM tasks;"
-	values := []string {""}
-	res := database.InsertToDB(sqlString, values)
+	//sqlString := "SELECT * FROM tasks;"
+	//values := []string {""}
+	//res := database.InsertToDB(sqlString, values)
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
 func signIn(w http.ResponseWriter, r *http.Request) {
-	sqlString := "SELECT password FROM users WHERE id=$1;"
-	values := []string {"1"}
-	res := database.InsertToDB(sqlString, values)
+	//sqlString := "SELECT password FROM users WHERE id=$1;"
+	//values := []string {"1"}
+	//res := database.InsertToDB(sqlString, values)
 	// todo: check password
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
 func signUp(w http.ResponseWriter, r *http.Request) {
-	sqlString := "INSERT INTO users(login, password) VALUES($1, $2) returning id;"
-	values := []string {"log", "pass"}
-	// todo: check user exists hash password
-	database.InsertToDB(sqlString, values)
+	data := handlePostData(r)
+	password := getPassword(data.Login)
 	w.WriteHeader(http.StatusAccepted)
+	if password != "" {
+		w.Write([]byte(`{"message": "error"}`))
+	}
+	hashedPassword := hashPassword(password)
+	sqlString := "INSERT INTO users(login, password) VALUES($1, $2) returning id;"
+	values := []string {data.Login,hashedPassword}
+	database.InsertToDB(sqlString, values)
+
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
@@ -37,10 +76,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"message": "delete called"}`))
 }
 
-
 func notFound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte(`{"message": "not found"}`))
 }
-

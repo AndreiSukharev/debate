@@ -5,8 +5,7 @@ class RegistrationService {
     static signUp(data) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await api().get('signup');
-                // const res = await api().post('signup', data);
+                const res = await api().post('signup', data);
                 resolve(res.data)
             } catch (err) {
                 reject(err);

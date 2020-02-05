@@ -35,6 +35,16 @@ func CreateTables() {
 	log.Print("Tables are created!")
 }
 
+func GetSpecificFromDB(sqlString string, value string) string{
+	var row string
+
+	db := connectToDb()
+
+	 db.QueryRow(sqlString, value).Scan(&row)
+	//checkErr(err)
+	return row
+}
+
 func InsertToDB(sqlString string, values []string) int{
 	var id int
 
@@ -42,7 +52,6 @@ func InsertToDB(sqlString string, values []string) int{
 
 	err := db.QueryRow(sqlString, values[0], values[1]).Scan(&id)
 	checkErr(err)
-	fmt.Println("inserted id =", id)
 	return id
 }
 

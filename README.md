@@ -15,7 +15,7 @@ App goals:
 - [x] Don't use any frameworks 
 - [x] Handle CORS by own wrap function 
 - [x] Write pure SQL without ORM
-- [ ] Create Auth
+- [ ] Create Auth/hash password
 - [ ] Use JWT
 - [ ] Build CRUD functionality for tasks
 
@@ -36,9 +36,9 @@ https://docs.docker.com/compose/install/
 
 ```
 git clone https://github.com/AndreiSukharev/debate.git task
-cd task
-go build main.go
-cd client
+cd task/server
+go run .
+cd ../client
 npm install
 npm run dev
 front: http://localhost:8080
