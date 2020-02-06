@@ -2,7 +2,7 @@
     <div class="row">
 
         <div class="col border">
-            <form>
+            <form @submit.prevent>
                 <div class="form-group">
                     <label for="login">Login</label>
                     <input type="text" class="form-control" id="login" v-model="signInData.login" placeholder="Login">
@@ -59,7 +59,8 @@
             async signIn() {
                 const res = await RegistrationService.signIn(this.signInData);
                 if (res['message'] === 'ok') {
-                    this.loginUser(this.signInData.login)
+                    this.loginUser(this.signInData.login);
+                    this.$toasted.error('Success')
                 } else {
                     this.$toasted.error('Wrong login or password')
                 }

@@ -47,26 +47,33 @@ func getTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func signIn(w http.ResponseWriter, r *http.Request) {
-	//sqlString := "SELECT password FROM users WHERE id=$1;"
-	//values := []string {"1"}
-	//res := database.InsertToDB(sqlString, values)
-	// todo: check password
-	w.WriteHeader(http.StatusCreated)
+	data := handlePostData(r)
+	password := getPassword(data.Login)
+	if password != "" {
+		w.WriteHeader(http.StatusAccepted)
+		w.Write([]byte(`{"message": "error"}`))
+	}
+	hashedPassword := hashPassword(password)
+	if hashedPassword != password {
+		w.WriteHeader(http.StatusAccepted)
+		w.Write([]byte(`{"message": "error"}`))
+	}
+	w.WriteHeader(http.StatusAccepted)
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
 func signUp(w http.ResponseWriter, r *http.Request) {
 	data := handlePostData(r)
 	password := getPassword(data.Login)
-	w.WriteHeader(http.StatusAccepted)
 	if password != "" {
+		w.WriteHeader(http.StatusAccepted)
 		w.Write([]byte(`{"message": "error"}`))
 	}
 	hashedPassword := hashPassword(password)
 	sqlString := "INSERT INTO users(login, password) VALUES($1, $2) returning id;"
 	values := []string {data.Login,hashedPassword}
 	database.InsertToDB(sqlString, values)
-
+	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "ok"}`))
 }
 

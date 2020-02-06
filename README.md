@@ -15,7 +15,7 @@ App goals:
 - [x] Don't use any frameworks 
 - [x] Handle CORS by own wrap function 
 - [x] Write pure SQL without ORM
-- [ ] Create Auth/hash password
+- [x] Create Auth/hash password
 - [ ] Use JWT
 - [ ] Build CRUD functionality for tasks
 
