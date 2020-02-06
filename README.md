@@ -39,5 +39,5 @@ cd ../client
 npm install
 npm run serve
 front: http://localhost:8080
-server: http://localhost:5010/ 
+api: http://localhost:5010/api
 ```
