@@ -23,12 +23,14 @@ App goals:
 ```
 brew install go npm
 ```
+Don't forget to install and start postgres
 
 ## Build and Run
 
 ```
 git clone https://github.com/AndreiSukharev/debate.git task
 cd task/server
+go mod download
 go run .
 cd ../client
 npm install
