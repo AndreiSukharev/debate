@@ -5,7 +5,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{task.title}}</h5>
                 <p class="card-text">Goal: {{task.goal}}</p>
-                <p class="card-text">Due date: {{task.dueDate}}</p>
+                <p class="card-text">Due date: {{task.duedate}}</p>
                 <button class="btn btn-primary btn-block" @click="openModal()">Edit</button>
                 <button class="btn btn-danger btn-block" @click="deleteTask">Delete</button>
             </div>
@@ -32,8 +32,7 @@
         },
         methods: {
             openModal() {
-                this.$root.$emit('getModalEditTask', this.task);
-                this.$bvModal.show('modal-edit-task')
+                this.$emit('openModal', this.task);
             },
             async deleteTask() {
                 await TaskService.deleteTask(this.task.id);

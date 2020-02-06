@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 type userData struct {
@@ -16,6 +17,7 @@ type userData struct {
 }
 
 type taskData struct {
+	Id		int
 	Title   string
 	Goal    string
 	Duedate string
@@ -78,6 +80,16 @@ func deleteTasks(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 	sqlString := "DELETE FROM tasks WHERE id = $1;"
 	database.DeleteFromDB(sqlString, id)
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(`{"message": "ok"}`))
+}
+
+func updateTasks(w http.ResponseWriter, r *http.Request) {
+	data := handleTaskData(r)
+	sqlString := "UPDATE tasks SET title = $1, goal = $2, duedate = $3 WHERE id = $4;"
+	id := strconv.Itoa(data.Id)
+	values := []string {data.Title, data.Goal, data.Duedate, id}
+	database.UpdateInDB(sqlString, values)
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "ok"}`))
 }

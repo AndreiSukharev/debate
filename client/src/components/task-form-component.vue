@@ -12,8 +12,9 @@
         </div>
 
         <div class="form-group">
-            <label for="dueDate">Due Date</label>
-            <input type="date" class="form-control" id="dueDate" v-model="task.dueDate" placeholder="Enter your deadline">
+            <label for="duedate">Due Date</label>
+            <input type="date" class="form-control" id="duedate" v-model="task.duedate"
+                   placeholder="Enter your deadline">
         </div>
 
     </form>
@@ -23,20 +24,20 @@
 <script>
     export default {
         name: "task-form-component",
+        props: {
+            taskForForm: Object
+        },
         data() {
             return {
                 task: {
                     id: '',
                     title: '',
                     goal: '',
-                    dueDate: ''
+                    duedate: ''
                 }
             }
         },
         mounted() {
-            this.$root.$on('getModalEditTask', (task) => {
-                this.task = task;
-            });
         },
         watch: {
             task: {
@@ -45,7 +46,14 @@
                 handler() {
                     this.$emit('updateTask', this.task)
                 }
-            }
+            },
+            taskForForm: {
+                immediate: true,
+                deep: true,
+                handler(task) {
+                    this.task = task;
+                }
+            },
         }
     }
 </script>

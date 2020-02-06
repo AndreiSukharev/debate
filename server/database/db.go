@@ -92,6 +92,18 @@ func DeleteFromDB(sqlString string, id string) {
 	stmt, err := db.Prepare(sqlString)
 	_, err = stmt.Exec(id)
 	checkErr(err)
+	log.Print("deleted data from db")
+
+}
+
+func UpdateInDB(sqlString string, values []string) {
+	db := connectToDb()
+	defer db.Close()
+	stmt, err := db.Prepare(sqlString)
+	_, err = stmt.Exec(values[0], values[1], values[2], values[3])
+	checkErr(err)
+	log.Print("updated data from db")
+
 }
 
 func checkErr(err error) {

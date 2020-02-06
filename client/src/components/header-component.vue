@@ -54,7 +54,7 @@
                 task: {
                     title: '',
                     goal: '',
-                    dueDate: ''
+                    duedate: ''
                 }
             }
         },
@@ -65,7 +65,8 @@
             async addTask() {
                 await TaskService.addTask(this.task);
                 this.$toasted.success("Task is added");
-                this.$root.$emit('updateTasks')
+                this.$root.$emit('updateTasks');
+                this.closeModal();
             },
             openModal() {
                 this.$refs['modal-add-task'].show();
@@ -78,7 +79,7 @@
                 this.task = {
                     title: '',
                     goal: '',
-                    dueDate: ''
+                    duedate: ''
                 }
             },
              logout() {

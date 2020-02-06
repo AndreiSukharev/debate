@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-4" v-for="task in tasks" :key="task.id">
-                <task-component @updateTasks="getTasks()" :task="task"></task-component>
+                <task-component @updateTasks="getTasks()" @openModal="openModal($event)" :task="task"></task-component>
             </div>
         </div>
 
@@ -14,7 +14,7 @@
                     Task Manager
                 </h2>
             </div>
-            <task-form-component @updateTask="updatedTask=$event"></task-form-component>
+            <task-form-component @updateTask="updatedTask=$event" :taskForForm="taskForForm"></task-form-component>
             <div slot="modal-footer" class="text-center form-actions">
                 <button class="btn btn-danger" @click="closeModal()">
                     Cancel
@@ -43,6 +43,7 @@
         },
         data() {
             return {
+                taskForForm: {},
                 updatedTask: {},
                 tasks: [],
             };
@@ -63,8 +64,15 @@
                     console.log(e);
                 }
             },
-            editTask() {
-
+            async editTask() {
+                await TaskService.updateTask(this.updatedTask);
+                this.$toasted.info('Task is updated');
+                this.closeModal();
+                await this.getTasks()
+            },
+            openModal(task) {
+                this.taskForForm = task;
+                this.$bvModal.show('modal-edit-task')
             },
             closeModal() {
                 this.$refs['modal-edit-task'].hide();
