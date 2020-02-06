@@ -26,6 +26,7 @@
         data() {
             return {
                 task: {
+                    id: '',
                     title: '',
                     goal: '',
                     dueDate: ''

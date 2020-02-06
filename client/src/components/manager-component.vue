@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-4" v-for="task in tasks" :key="task.id">
-                <task-component :task="task"></task-component>
+                <task-component @updateTasks="getTasks()" :task="task"></task-component>
             </div>
         </div>
 
@@ -44,18 +44,25 @@
         data() {
             return {
                 updatedTask: {},
-                tasks: [
-                ],
+                tasks: [],
             };
         },
         async created() {
-            try {
-                this.tasks = await TaskService.getTasks();
-            } catch (e) {
-                console.log(e);
-            }
+            await this.getTasks();
+        },
+         mounted() {
+            this.$root.$on('updateTasks', async() => {
+                await this.getTasks();
+            });
         },
         methods: {
+            async getTasks() {
+                try {
+                    this.tasks = await TaskService.getTasks();
+                } catch (e) {
+                    console.log(e);
+                }
+            },
             editTask() {
 
             },

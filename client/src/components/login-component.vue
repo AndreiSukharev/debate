@@ -60,7 +60,7 @@
                 const res = await RegistrationService.signIn(this.signInData);
                 if (res['message'] === 'ok') {
                     this.loginUser(this.signInData.login);
-                    this.$toasted.error('Success')
+                    this.$toasted.success('Success')
                 } else {
                     this.$toasted.error('Wrong login or password')
                 }

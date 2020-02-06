@@ -27,7 +27,7 @@ class TaskService {
     static deleteTask(id) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await api().delete('tasks', id);
+                const res = await api().delete(`tasks/${id}`);
                 resolve(res.data)
             } catch (err) {
                 reject(err);

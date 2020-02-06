@@ -39,6 +39,7 @@ func main() {
 	api.HandleFunc("/signup", signUp).Methods(http.MethodPost)
 	api.HandleFunc("/tasks", getTasks).Methods(http.MethodGet)
 	api.HandleFunc("/tasks", addTasks).Methods(http.MethodPost)
+	api.HandleFunc("/tasks/{id}", deleteTasks).Methods(http.MethodDelete)
 
 	log.Fatal(http.ListenAndServe(":5010", CORS(r)))
 

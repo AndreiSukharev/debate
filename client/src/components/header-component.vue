@@ -40,6 +40,7 @@
 
 <script>
     import TaskFormComponent from "./task-form-component.vue"
+    import TaskService from '../services/Task.js'
     import { mapMutations } from 'vuex';
 
     export default {
@@ -61,8 +62,10 @@
             ...mapMutations([
                 'logoutUser'
             ]),
-            addTask() {
-
+            async addTask() {
+                await TaskService.addTask(this.task);
+                this.$toasted.success("Task is added");
+                this.$root.$emit('updateTasks')
             },
             openModal() {
                 this.$refs['modal-add-task'].show();

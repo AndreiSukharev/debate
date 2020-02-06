@@ -64,6 +64,7 @@ func GetSpecificFromDB(sqlString string, value string) string {
 
 	db := connectToDb()
 	err := db.QueryRow(sqlString, value).Scan(&row)
+	defer db.Close()
 	checkErr(err)
 	return row
 }
@@ -73,6 +74,7 @@ func InsertToDB(sqlString string, values []string) int {
 	var err error
 
 	db := connectToDb()
+	defer db.Close()
 	lenValues := len(values)
 	if lenValues == 2 {
 		err = db.QueryRow(sqlString, values[0], values[1]).Scan(&id)
@@ -81,8 +83,15 @@ func InsertToDB(sqlString string, values []string) int {
 	}
 	checkErr(err)
 	log.Print("inserted data from db")
-
 	return id
+}
+
+func DeleteFromDB(sqlString string, id string) {
+	db := connectToDb()
+	defer db.Close()
+	stmt, err := db.Prepare(sqlString)
+	_, err = stmt.Exec(id)
+	checkErr(err)
 }
 
 func checkErr(err error) {

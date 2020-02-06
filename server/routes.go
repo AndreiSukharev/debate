@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -72,6 +73,15 @@ func getTasks(w http.ResponseWriter, r *http.Request) {
 	w.Write(JSON)
 }
 
+func deleteTasks(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+	sqlString := "DELETE FROM tasks WHERE id = $1;"
+	database.DeleteFromDB(sqlString, id)
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(`{"message": "ok"}`))
+}
+
 func signIn(w http.ResponseWriter, r *http.Request) {
 	data := handleUserData(r)
 	passwordForChecking := getPasswordByLogin(data.Login)
@@ -107,14 +117,3 @@ func signUp(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
-func delete(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message": "delete called"}`))
-}
-
-func notFound(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte(`{"message": "not found"}`))
-}
