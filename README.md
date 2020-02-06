@@ -23,12 +23,15 @@ App goals:
 ```
 brew install go npm
 ```
-Don't forget to install and start postgres
+#### Setup postgres
+- Don't forget to install and start postgres
+- Check server/.env file to change environment vars for your db
+
 
 ## Build and Run
 
 ```
-git clone https://github.com/AndreiSukharev/debate.git task
+git clone https://github.com/AndreiSukharev/Task_manager.git task
 cd task/server
 go mod download
 go run .
