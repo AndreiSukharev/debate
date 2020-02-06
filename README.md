@@ -37,7 +37,7 @@ go mod download
 go run .
 cd ../client
 npm install
-npm run dev
+npm run serve
 front: http://localhost:8080
 server: http://localhost:5010/ 
 ```
