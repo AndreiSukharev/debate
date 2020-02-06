@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -13,7 +14,24 @@ type userData struct {
 	Password string
 }
 
-func handlePostData(r *http.Request) *userData {
+type taskData struct {
+	Title   string
+	Goal    string
+	Duedate string
+}
+
+func handleTaskData(r *http.Request) *taskData {
+	var data taskData
+
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&data)
+	if err != nil {
+		panic(err)
+	}
+	return &data
+}
+
+func handleUserData(r *http.Request) *userData {
 	var data userData
 
 	decoder := json.NewDecoder(r.Body)
@@ -24,9 +42,8 @@ func handlePostData(r *http.Request) *userData {
 	return &data
 }
 
-func getPassword(login string) string {
+func getPasswordByLogin(login string) string {
 	sqlString := "SELECT password FROM users WHERE login=$1;"
-	//values := []string {login}
 	row := database.GetSpecificFromDB(sqlString, login)
 	return row
 }
@@ -38,40 +55,53 @@ func hashPassword(password string) string{
 	return sum
 }
 
-func getTasks(w http.ResponseWriter, r *http.Request) {
-	//sqlString := "SELECT * FROM tasks;"
-	//values := []string {""}
-	//res := database.InsertToDB(sqlString, values)
+func addTasks(w http.ResponseWriter, r *http.Request) {
+	data := handleTaskData(r)
+	sqlString := "INSERT INTO tasks(title, goal, duedate) VALUES($1, $2, $3) returning id;"
+	values := []string {data.Title, data.Goal, data.Duedate}
+	database.InsertToDB(sqlString, values)
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
+func getTasks(w http.ResponseWriter, r *http.Request) {
+	sqlString := "SELECT * FROM tasks;"
+	tasks := database.GetAllFromDB(sqlString)
+	JSON, _ := json.Marshal(tasks)
+	w.WriteHeader(http.StatusCreated)
+	w.Write(JSON)
+}
+
 func signIn(w http.ResponseWriter, r *http.Request) {
-	data := handlePostData(r)
-	password := getPassword(data.Login)
-	if password != "" {
+	data := handleUserData(r)
+	passwordForChecking := getPasswordByLogin(data.Login)
+	if passwordForChecking == "" {
 		w.WriteHeader(http.StatusAccepted)
 		w.Write([]byte(`{"message": "error"}`))
+		return
 	}
-	hashedPassword := hashPassword(password)
-	if hashedPassword != password {
+	hashedPassword := hashPassword(data.Password)
+	if hashedPassword != passwordForChecking {
 		w.WriteHeader(http.StatusAccepted)
 		w.Write([]byte(`{"message": "error"}`))
+		return
 	}
 	w.WriteHeader(http.StatusAccepted)
 	w.Write([]byte(`{"message": "ok"}`))
 }
 
 func signUp(w http.ResponseWriter, r *http.Request) {
-	data := handlePostData(r)
-	password := getPassword(data.Login)
-	if password != "" {
+	data := handleUserData(r)
+	isPasswordExists := getPasswordByLogin(data.Login)
+	if isPasswordExists != "" {
+		fmt.Println("in")
 		w.WriteHeader(http.StatusAccepted)
 		w.Write([]byte(`{"message": "error"}`))
+		return
 	}
-	hashedPassword := hashPassword(password)
+	hashedPassword := hashPassword(data.Password)
 	sqlString := "INSERT INTO users(login, password) VALUES($1, $2) returning id;"
-	values := []string {data.Login,hashedPassword}
+	values := []string {data.Login, hashedPassword}
 	database.InsertToDB(sqlString, values)
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "ok"}`))

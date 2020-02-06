@@ -8,8 +8,14 @@ import (
 	"os"
 )
 
+type task struct {
+	Id      int  	`json:"id"`
+	Title   string  `json:"title"`
+	Goal    string 	`json:"goal"`
+	Duedate string	`json:"duedate"`
+}
 
-func connectToDb() *sql.DB{
+func connectToDb() *sql.DB {
 	password := os.Getenv("POSTGRES_PASSWORD")
 	user := os.Getenv("POSTGRES_USER")
 	dbName := os.Getenv("POSTGRES_DB")
@@ -35,29 +41,53 @@ func CreateTables() {
 	log.Print("Tables are created!")
 }
 
-func GetSpecificFromDB(sqlString string, value string) string{
+func GetAllFromDB(sqlString string) []task {
+	db := connectToDb()
+	rows, err := db.Query(sqlString)
+	checkErr(err)
+	defer rows.Close()
+	var tasks []task
+	for rows.Next() {
+		t := task{}
+		err = rows.Scan(&t.Id, &t.Title, &t.Goal, &t.Duedate)
+		if err != nil {
+			continue
+		}
+		tasks = append(tasks, t)
+	}
+	log.Print("got data from db")
+	return tasks
+}
+
+func GetSpecificFromDB(sqlString string, value string) string {
 	var row string
 
 	db := connectToDb()
-
-	 db.QueryRow(sqlString, value).Scan(&row)
-	//checkErr(err)
+	err := db.QueryRow(sqlString, value).Scan(&row)
+	checkErr(err)
 	return row
 }
 
-func InsertToDB(sqlString string, values []string) int{
+func InsertToDB(sqlString string, values []string) int {
 	var id int
+	var err error
 
 	db := connectToDb()
-
-	err := db.QueryRow(sqlString, values[0], values[1]).Scan(&id)
+	lenValues := len(values)
+	if lenValues == 2 {
+		err = db.QueryRow(sqlString, values[0], values[1]).Scan(&id)
+	} else if lenValues == 3 {
+		err = db.QueryRow(sqlString, values[0], values[1], values[2]).Scan(&id)
+	}
 	checkErr(err)
+	log.Print("inserted data from db")
+
 	return id
 }
 
 func checkErr(err error) {
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 }
 

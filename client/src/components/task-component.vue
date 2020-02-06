@@ -2,7 +2,6 @@
 
     <div>
         <div class="card text-center" style="width: 18rem;">
-            <img class="card-img-top" src="" alt="photo">
             <div class="card-body">
                 <h5 class="card-title">{{task.title}}</h5>
                 <p class="card-text">Goal: {{task.goal}}</p>
@@ -28,11 +27,6 @@
         },
         data() {
             return {
-                // task: {
-                //     title: '',
-                //     goal: '',
-                //     dueDate: ''
-                // }
             }
         },
         methods: {

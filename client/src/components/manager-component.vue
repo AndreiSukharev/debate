@@ -3,7 +3,7 @@
     <div>
 
         <div class="row">
-            <div class="col-4" v-for="task in tasks">
+            <div class="col-4" v-for="task in tasks" :key="task.id">
                 <task-component :task="task"></task-component>
             </div>
         </div>
@@ -33,6 +33,7 @@
 <script>
     import TaskComponent from "./task-component.vue"
     import TaskFormComponent from "./task-form-component.vue"
+    import TaskService from '../services/Task.js'
 
     export default {
         name: "manager-component",
@@ -44,10 +45,15 @@
             return {
                 updatedTask: {},
                 tasks: [
-                    {title: "do1", goal: "to do homework", dueDate: "01.02.2020"},
-                    {title: "do2", goal: "work", dueDate: "03.12.2020"}
                 ],
             };
+        },
+        async created() {
+            try {
+                this.tasks = await TaskService.getTasks();
+            } catch (e) {
+                console.log(e);
+            }
         },
         methods: {
             editTask() {

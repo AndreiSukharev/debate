@@ -37,7 +37,8 @@ func main() {
 	api := r.PathPrefix("/api").Subrouter()
 	api.HandleFunc("/signin", signIn).Methods(http.MethodPost)
 	api.HandleFunc("/signup", signUp).Methods(http.MethodPost)
-	api.HandleFunc("/signin", getTasks).Methods(http.MethodGet)
+	api.HandleFunc("/tasks", getTasks).Methods(http.MethodGet)
+	api.HandleFunc("/tasks", addTasks).Methods(http.MethodPost)
 
 	log.Fatal(http.ListenAndServe(":5010", CORS(r)))
 
