@@ -7,7 +7,6 @@ App for managing your tasks.
 
 [Database] PostgreSQL
 
-[Deployment] Docker
 
 General aim is to learn Go for building REST API.
 
@@ -16,20 +15,13 @@ App goals:
 - [x] Handle CORS by own wrap function 
 - [x] Write pure SQL without ORM
 - [x] Create Auth/hash password
-- [ ] Use JWT
-- [ ] Build CRUD functionality for tasks
+- [x] Build CRUD functionality for tasks
 
 ## Getting Started
 
 #### Install go, npm
 ```
 brew install go npm
-```
-
-#### Install docker
-
-```
-https://docs.docker.com/compose/install/
 ```
 
 ## Build and Run
