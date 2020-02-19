@@ -1,2 +1,2 @@
-*.vue linguist-detectable=true
+*.vue linguist-detectable=false
 *.go linguist-detectable=true
